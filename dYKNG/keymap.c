@@ -50,6 +50,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 };
 
+void pointing_device_init_user(void) {
+    set_auto_mouse_enable(true);
+}
+
 const uint16_t PROGMEM combo0[] = { MT(MOD_LCTL, KC_BSPC), KC_F, KC_L, COMBO_END};
 const uint16_t PROGMEM combo1[] = { MT(MOD_LCTL, KC_BSPC), KC_L, KC_K, COMBO_END};
 
