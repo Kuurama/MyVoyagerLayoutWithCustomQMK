@@ -127,9 +127,10 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     case MT_REP:
       if (record->tap.count && record->event.pressed) {
         repeat_key_invoke(&record->event);
-        return false;
-      } 
-      return true;
+      } else if (record->event.pressed) {
+          tap_code16(KC_LEFT_ALT);
+      }
+      return false;
     case RGB_SLD:
       if (record->event.pressed) {
         rgblight_mode(1);
