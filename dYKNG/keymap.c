@@ -56,15 +56,6 @@ void pointing_device_init_user(void) {
     set_auto_mouse_enable(true);
 }
 
-const uint16_t PROGMEM combo0[] = { MT(MOD_LCTL, KC_BSPC), KC_F, KC_L, COMBO_END};
-const uint16_t PROGMEM combo1[] = { MT(MOD_LCTL, KC_BSPC), KC_L, KC_K, COMBO_END};
-
-combo_t key_combos[COMBO_COUNT] = {
-    COMBO(combo0, LCTL(KC_C)),
-    COMBO(combo1, LCTL(KC_V)),
-};
-
-
 extern rgb_config_t rgb_matrix_config;
 
 void keyboard_post_init_user(void) {
