@@ -2,6 +2,8 @@
 #include "version.h"
 #define MOON_LED_LEVEL LED_LEVEL
 #define ML_SAFE_RANGE SAFE_RANGE
+#include "keymap_us_international.h"
+#include "sendstring_us_international.h"
 #define MT_REP MT(MOD_LALT, KC_0)
 
 enum custom_keycodes {
