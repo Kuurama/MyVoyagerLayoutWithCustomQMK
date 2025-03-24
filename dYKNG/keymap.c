@@ -4,7 +4,6 @@
 #define ML_SAFE_RANGE SAFE_RANGE
 #include "keymap_us_international.h"
 #include "sendstring_us_international.h"
-#define MT_REP MT(MOD_LALT, KC_0)
 
 enum custom_keycodes {
   RGB_SLD = ML_SAFE_RANGE,
@@ -20,7 +19,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_ESCAPE,      RALT(KC_EQUAL), RALT(KC_SCLN),  KC_BSPC,        KC_DELETE,      KC_ENTER,                                       KC_DELETE,      KC_GRAVE,       KC_CIRC,        KC_TRANSPARENT, KC_RIGHT_ALT,   TG(3),          
     KC_TAB,         KC_B,           KC_F,           KC_L,           KC_K,           KC_Q,                                           KC_P,           KC_G,           KC_O,           KC_U,           KC_COMMA,       KC_F12,         
     KC_LEFT_SHIFT,  KC_N,           KC_S,           KC_H,           KC_T,           KC_M,                                           KC_Y,           KC_C,           KC_A,           KC_E,           KC_I,           KC_SCLN,        
-    KC_LEFT_GUI,    MT(MOD_LALT, KC_X),KC_V,           KC_J,           KC_D,           KC_Z,                                           KC_QUOTE,       KC_W,           KC_DOT,         KC_SLASH,       MT_REP,    KC_RIGHT_CTRL,  
+    KC_LEFT_GUI,    MT(MOD_LALT, KC_X),KC_V,           KC_J,           KC_D,           KC_Z,                                           KC_QUOTE,       KC_W,           KC_DOT,         KC_SLASH,       QK_REP,    KC_RIGHT_CTRL,  
                                                     LT(1,KC_R),     MT(MOD_LCTL, KC_BSPC),                                MT(MOD_LSFT, KC_ENTER),LT(2,KC_SPACE)
   ),
   [1] = LAYOUT_voyager(
@@ -114,7 +113,6 @@ bool rgb_matrix_indicators_user(void) {
 bool remember_last_key_user(uint16_t keycode, keyrecord_t* record,
                             uint8_t* remembered_mods) {
   switch (keycode) {
-    case MT_REP:
     case MT(MOD_LCTL, KC_BSPC):
     case LT(2,KC_SPACE):
     case MT(MOD_LSFT, KC_ENTER):
@@ -126,13 +124,6 @@ bool remember_last_key_user(uint16_t keycode, keyrecord_t* record,
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
 
-    case MT_REP:
-      if (record->tap.count && record->event.pressed) {
-        repeat_key_invoke(&record->event);
-      } else if (record->event.pressed) {
-          tap_code16(KC_LEFT_ALT);
-      }
-      return false;
     case RGB_SLD:
       if (record->event.pressed) {
         rgblight_mode(1);
