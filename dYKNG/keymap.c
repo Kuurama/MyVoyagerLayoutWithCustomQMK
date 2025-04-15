@@ -54,7 +54,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 void pointing_device_init_user(void) {
     set_auto_mouse_enable(true);
-    pointing_device_set_cpi(1024);
+    pointing_device_set_cpi(330);
 }
 
 extern rgb_config_t rgb_matrix_config;
