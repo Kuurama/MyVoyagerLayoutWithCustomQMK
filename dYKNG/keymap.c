@@ -4,6 +4,8 @@
 #ifndef ZSA_SAFE_RANGE
 #define ZSA_SAFE_RANGE SAFE_RANGE
 #endif
+#include "keymap_us_international.h"
+#include "sendstring_us_international.h"
 
 enum custom_keycodes {
   RGB_SLD = ZSA_SAFE_RANGE,
@@ -60,9 +62,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 };
 
-
-
-
+void pointing_device_init_user(void) {
+    set_auto_mouse_enable(true);
+    pointing_device_set_cpi(330);
+}
 
 extern rgb_config_t rgb_matrix_config;
 
@@ -120,6 +123,15 @@ bool rgb_matrix_indicators_user(void) {
   return true;
 }
 
+bool remember_last_key_user(uint16_t keycode, keyrecord_t* record, uint8_t* remembered_mods) {
+  switch (keycode) {
+    case MT(MOD_LCTL, KC_BSPC):
+    case LT(2,KC_SPACE):
+    case MT(MOD_LSFT, KC_ENTER):
+      return false;
+  }
+  return true;
+}
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
