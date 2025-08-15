@@ -18,9 +18,9 @@ enum custom_keycodes {
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_voyager(
     KC_ESCAPE,      RALT(KC_EQUAL), RALT(KC_SCLN),  KC_BSPC,        KC_DELETE,      KC_ENTER,                                       KC_DELETE,      KC_GRAVE,       KC_CIRC,        TG(5),          KC_RIGHT_ALT,   TG(3),          
-    KC_TAB,         KC_B,           KC_F,           KC_L,           KC_K,           KC_Q,                                           KC_P,           KC_G,           KC_O,           KC_U,           KC_COMMA,       KC_F12,         
+    KC_TAB,         KC_X,           KC_F,           KC_L,           KC_K,           KC_Q,                                           KC_P,           KC_G,           KC_O,           KC_U,           KC_COMMA,       KC_F12,         
     KC_LEFT_SHIFT,  KC_N,           KC_S,           KC_H,           KC_T,           KC_M,                                           KC_Y,           KC_C,           KC_A,           KC_E,           KC_I,           KC_SCLN,        
-    KC_LEFT_GUI,    MT(MOD_LALT, KC_X),KC_V,           KC_J,           KC_D,           MT(MOD_LALT, KC_Z),                                KC_QUOTE,       KC_W,           KC_DOT,         KC_SLASH,       KC_TRANSPARENT, KC_RIGHT_CTRL,  
+    KC_LEFT_GUI,    MT(MOD_LALT, KC_B),KC_V,           KC_J,           KC_D,           MT(MOD_LALT, KC_Z),                                KC_QUOTE,       KC_W,           KC_DOT,         KC_SLASH,       KC_TRANSPARENT, KC_RIGHT_CTRL,  
                                                     LT(1, KC_R),    MT(MOD_LCTL, KC_BSPC),                                MT(MOD_LSFT, KC_ENTER),LT(2, KC_SPACE)
   ),
   [1] = LAYOUT_voyager(
@@ -55,7 +55,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     KC_TRANSPARENT, KC_0,           KC_1,           KC_2,           KC_3,           KC_4,                                           KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
     KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
     KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
-    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
+    KC_TRANSPARENT, KC_B,           KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_Z,                                           KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
                                                     KC_R,           KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT
   ),
 };
@@ -101,15 +101,20 @@ bool rgb_matrix_indicators_user(void) {
   if (rawhid_state.rgb_control) {
       return false;
   }
-    if (keyboard_config.disable_layer_led) { return false; }
-  switch (biton32(layer_state)) {
-    case 3:
-      set_layer_color(3);
-      break;
-   default:
-      if (rgb_matrix_get_flags() == LED_FLAG_NONE) {
-        rgb_matrix_set_color_all(0, 0, 0);
-      }
+  if (!keyboard_config.disable_layer_led) { 
+    switch (biton32(layer_state)) {
+      case 3:
+        set_layer_color(3);
+        break;
+     default:
+        if (rgb_matrix_get_flags() == LED_FLAG_NONE) {
+          rgb_matrix_set_color_all(0, 0, 0);
+        }
+    }
+  } else {
+    if (rgb_matrix_get_flags() == LED_FLAG_NONE) {
+      rgb_matrix_set_color_all(0, 0, 0);
+    }
   }
 
   return true;
