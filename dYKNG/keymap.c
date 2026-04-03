@@ -17,17 +17,17 @@ enum custom_keycodes {
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [0] = LAYOUT_voyager(
-    KC_ESCAPE,      RALT(KC_EQUAL), RALT(KC_SCLN),  KC_BSPC,        KC_DELETE,      KC_ENTER,                                       KC_DELETE,      KC_GRAVE,       KC_CIRC,        TG(5),          KC_RIGHT_ALT,   TG(3),          
+    KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_BSPC,        KC_DELETE,      KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_GRAVE,       KC_CIRC,        TG(5),          KC_TRANSPARENT, TG(3),          
     KC_TAB,         KC_X,           KC_F,           KC_L,           KC_K,           KC_Q,                                           KC_P,           KC_G,           KC_O,           KC_U,           KC_COMMA,       KC_F12,         
-    KC_LEFT_SHIFT,  KC_N,           KC_S,           KC_H,           KC_T,           KC_M,                                           KC_Y,           KC_C,           KC_A,           KC_E,           KC_I,           KC_SCLN,        
-    KC_LEFT_GUI,    MT(MOD_LALT, KC_B),KC_V,           KC_J,           KC_D,           MT(MOD_LALT, KC_Z),                                KC_QUOTE,       KC_W,           KC_DOT,         KC_SLASH,       KC_TRANSPARENT, KC_RIGHT_CTRL,  
-                                                    LT(1, KC_R),    MT(MOD_LCTL, KC_BSPC),                                MT(MOD_LSFT, KC_ENTER),LT(2, KC_SPACE)
+    KC_ESCAPE,      MT(MOD_LGUI, KC_N),MT(MOD_LALT, KC_S),MT(MOD_LCTL, KC_H),MT(MOD_LSFT, KC_T),KC_M,                                           KC_Y,           MT(MOD_LSFT, KC_C),MT(MOD_LCTL, KC_A),MT(MOD_LALT, KC_E),MT(MOD_LGUI, KC_I),KC_SCLN,        
+    KC_TRANSPARENT, KC_B,           MT(MOD_RALT, KC_V),KC_J,           KC_D,           KC_Z,                                           KC_QUOTE,       KC_W,           KC_UNDS,        KC_SLASH,       MT(MOD_RALT, KC_DOT),KC_RIGHT_CTRL,  
+                                                    LT(1, KC_R),    KC_BSPC,                                        KC_ENTER,       LT(2, KC_SPACE)
   ),
   [1] = LAYOUT_voyager(
-    KC_ESCAPE,      KC_F1,          KC_F2,          KC_F3,          KC_F4,          KC_F5,                                          KC_F6,          KC_F7,          KC_F8,          KC_F9,          KC_F10,         KC_F11,         
-    KC_TRANSPARENT, KC_DLR,         KC_LBRC,        KC_LCBR,        KC_LPRN,        KC_PLUS,                                        KC_EQUAL,       KC_RPRN,        KC_RCBR,        KC_RBRC,        KC_TRANSPARENT, KC_F12,         
-    KC_BSPC,        KC_0,           KC_1,           KC_2,           KC_3,           KC_4,                                           KC_5,           KC_6,           KC_7,           KC_8,           KC_9,           KC_PERC,        
-    KC_LEFT_GUI,    MT(MOD_LALT, KC_GRAVE),KC_BSLS,        KC_LABK,        KC_RABK,        KC_EXLM,                                        KC_DQUO,        KC_PIPE,        KC_MINUS,       KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
+    KC_GRAVE,       KC_RBRC,        KC_LPRN,        KC_RPRN,        KC_COMMA,       KC_DOT,                                         KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, KC_TRANSPARENT, 
+    KC_LBRC,        KC_EXLM,        KC_LCBR,        KC_RCBR,        KC_SCLN,        KC_QUES,                                        KC_TRANSPARENT, KC_7,           KC_8,           KC_9,           KC_TRANSPARENT, KC_TRANSPARENT, 
+    KC_HASH,        KC_CIRC,        KC_EQUAL,       KC_UNDS,        KC_DLR,         KC_ASTR,                                        KC_TRANSPARENT, KC_4,           KC_5,           KC_6,           KC_0,           KC_PERC,        
+    KC_AMPR,        KC_LABK,        KC_PIPE,        KC_MINUS,       KC_RABK,        KC_SLASH,                                       KC_DQUO,        KC_1,           KC_2,           KC_3,           KC_TRANSPARENT, KC_BSLS,        
                                                     KC_TRANSPARENT, KC_TRANSPARENT,                                 KC_TRANSPARENT, KC_TRANSPARENT
   ),
   [2] = LAYOUT_voyager(
@@ -60,6 +60,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   ),
 };
 
+const char chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] PROGMEM = LAYOUT(
+  'L', 'L', 'L', 'L', 'L', 'L', 'R', 'R', 'R', 'R', 'R', 'R', 
+  'L', 'L', 'L', 'L', 'L', 'L', 'R', 'R', 'R', 'R', 'R', 'R', 
+  'L', 'L', 'L', 'L', 'L', 'L', 'R', 'R', 'R', 'R', 'R', 'R', 
+  'L', 'L', 'L', 'L', 'L', 'L', 'R', 'R', 'R', 'R', 'R', 'R', 
+  '*', '*', '*', '*'
+);
 
 
 
@@ -121,8 +128,26 @@ bool rgb_matrix_indicators_user(void) {
 }
 
 
+
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
+  case QK_MODS ... QK_MODS_MAX:
+    // Mouse and consumer keys (volume, media) with modifiers work inconsistently across operating systems,
+    // this makes sure that modifiers are always applied to the key that was pressed.
+    if (IS_MOUSE_KEYCODE(QK_MODS_GET_BASIC_KEYCODE(keycode)) || IS_CONSUMER_KEYCODE(QK_MODS_GET_BASIC_KEYCODE(keycode))) {
+      if (record->event.pressed) {
+        add_mods(QK_MODS_GET_MODS(keycode));
+        send_keyboard_report();
+        wait_ms(2);
+        register_code(QK_MODS_GET_BASIC_KEYCODE(keycode));
+        return false;
+      } else {
+        wait_ms(2);
+        del_mods(QK_MODS_GET_MODS(keycode));
+      }
+    }
+    break;
 
     case RGB_SLD:
       if (record->event.pressed) {
@@ -150,5 +175,3 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
   return true;
 }
-
-
